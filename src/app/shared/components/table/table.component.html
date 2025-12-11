@@ -1,0 +1,172 @@
+<p-table
+    #dt1
+    [value]="dataFormated"
+    [lazy]="lazyLoad"
+    [paginator]="true"
+    [loading]="loading"
+    [rows]="rows"
+    [scrollable]="true"
+    (selectionChange)="onSelectionChange($event)"
+    [(selection)]="selectedItems"
+    paginatorDropdownAppendTo="body"
+    [totalRecords]="totalCount"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+    [rowsPerPageOptions]="rowsPerPage"
+    (onLazyLoad)="loadLazy($event)"
+    styleClass="centered-table"
+    [exportHeader]="'customExportHeader'"
+>
+    <ng-template pTemplate="caption">
+        <div
+            class="tw-flex tw-gap-2 tw-flex-col sm:tw-flex-row sm:tw-justify-between"
+        >
+            <div class="tw-flex tw-gap-3">
+                <p-button
+                    *ngIf="showClearFilters"
+                    label="Limpiar Filtros"
+                    [outlined]="true"
+                    icon="pi pi-filter-slash"
+                    (click)="dt1.clear()"
+                />
+                <p-button
+                    icon="pi pi-external-link"
+                    label="Export"
+                    *ngIf="showGenerarExcel"
+                    (click)="onGenerarExcel.emit()"
+                />
+                <p-button
+                    [outlined]="true"
+                    icon="pi pi-ellipsis-v"
+                    [disabled]="selectedItems.length === 0"
+                    label="Acciones Selección"
+                    *ngIf="selection"
+                    (click)="menuGroup.toggle($event)"
+                />
+            </div>
+            <div>
+                <span class="p-input-icon-left ml-auto" *ngIf="showBuscador">
+                    <i class="pi pi-search"></i>
+                    <input
+                        class="tw-rounded-3xl"
+                        pInputText
+                        type="text"
+                        placeholder="Ingrese texto para buscar..."
+                        [formControl]="searchControl"
+                    />
+                </span>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngIf="selection" style="width: 4rem">
+                <p-tableHeaderCheckbox />
+            </th>
+            <th
+                *ngFor="let col of configTable"
+                class="centered-header tw-text-nowrap"
+                pSortableColumn="{{
+                    col.filter ? col.filter.field : col.field
+                }}"
+            >
+                <p-sortIcon
+                    field="{{ col.filter ? col.filter.field : col.field }}"
+                />
+                {{ col.header }}
+                <p-columnFilter
+                    type="{{ col.filter ? col.filter.type : col.type }}"
+                    field="{{ col.filter ? col.filter.field : col.field }}"
+                    display="menu"
+                    [showMatchModes]="col.type === 'date' ? true : false"
+                    [showOperator]="false"
+                    [showAddButton]="col.type === 'date' ? true : false"
+                    [maxConstraints]="2"
+                    [matchMode]="
+                        (col.filter ? col.filter.type : col.type) === 'select'
+                            ? 'equals'
+                            : null
+                    "
+                >
+                    <ng-template
+                        *ngIf="
+                            (col.filter ? col.filter.type : col.type) ===
+                            'select'
+                        "
+                        pTemplate="filter"
+                        let-value
+                        let-filter="filterCallback"
+                    >
+                        <p-dropdown
+                            [ngModel]="value"
+                            [options]="col.filter.options"
+                            (onChange)="filter($event.value)"
+                            placeholder="Seleccione"
+                            optionValue="value"
+                            optionLabel="nombre"
+                        >
+                            <ng-template let-option pTemplate="item">
+                                {{ option.value }}
+                            </ng-template>
+                        </p-dropdown>
+                    </ng-template>
+                </p-columnFilter>
+            </th>
+            <th [width]="'50px'" pFrozenColumn [frozen]="true"></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr style="height: 32px" class="centered-row">
+            <td *ngIf="selection">
+                <p-tableCheckbox [value]="rowData" />
+            </td>
+            <td *ngFor="let config of configTable" class="text-center">
+                <app-default-td-table
+                    [col]="config"
+                    [row]="rowData"
+                    class="centered-data"
+                ></app-default-td-table>
+            </td>
+            <td alignFrozen="right" pFrozenColumn [frozen]="true">
+                <n-round-button-menu
+                    *ngIf="showMenu"
+                    (clicked)="setMenu(rowData); menu.toggle($event)"
+                ></n-round-button-menu>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="loadingbody">
+        <tr style="height: 32px" class="centered-row">
+            <td *ngFor="let col of configTable; let even = even">
+                <p-skeleton
+                    [ngStyle]="{
+                        width: even
+                            ? col.field === 'year'
+                                ? '30%'
+                                : '40%'
+                            : '60%'
+                    }"
+                    class="centered-data"
+                />
+            </td>
+        </tr>
+        <th></th>
+        <th></th>
+    </ng-template>
+    <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+            <td [attr.colspan]="columns?.length + 1" class="centered-data">
+                No se encontraron registros
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+<p-tieredMenu #menu [model]="menuOptions" [popup]="true" appendTo="body">
+</p-tieredMenu>
+<p-tieredMenu
+    #menuGroup
+    [model]="menuOptionsGroup"
+    [popup]="true"
+    appendTo="body"
+>
+</p-tieredMenu>

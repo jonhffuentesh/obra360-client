@@ -1,0 +1,36 @@
+<div class="tw-flex tw-flex-col {{ class }}">
+    <label
+        *ngIf="label"
+        [ngStyle]="{ color: textColor }"
+        [for]="inputId"
+        class="{{ labelClass }} tw-mb-2"
+    >
+        {{ label }}<em *ngIf="required">*</em>
+    </label>
+
+    <input
+        pInputText
+        [type]="inputType ? inputType : 'text'"
+        [id]="inputId"
+        placeholder="Ingrese texto..."
+        title="Ingrese texto..."
+        [placeholder]="placeholder || label || 'Ingrese texto...'"
+        [title]="label || placeholder || 'Ingrese texto...'"
+        [formControl]="formControlInput"
+        [min]="min ? min : null"
+        [disabled]="disabled"
+        [max]="max ? max : null"
+        [ngClass]="{
+            error:
+                formControlInput.invalid &&
+                (formControlInput.dirty || formControlInput.touched)
+        }"
+        [readonly]="readonly"
+        (input)="onInput($event)"
+    />
+    <div *ngIf="formControlInput.invalid && showError">
+        <app-input-errors
+            [formControlInput]="formControlInput"
+        ></app-input-errors>
+    </div>
+</div>

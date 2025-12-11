@@ -1,0 +1,15 @@
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+<div class="card">
+    <app-header-title title="Listado de Usuarios"></app-header-title>
+    <app-table
+        [data]="usuarios"
+        [configTable]="config"
+        [menuInput]="menu"
+        [loading]="loading"
+        [totalCount]="totalCount"
+        (onPaginacion)="OnPagination($event)"
+        (onGenerarExcel)="onGenerarExcel($event)"
+    ></app-table>
+</div>
+<app-button label="Agregar Usuario" [icon]="'pi pi-plus'" routerLink="add"></app-button>

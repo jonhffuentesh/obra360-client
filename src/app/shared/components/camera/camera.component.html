@@ -1,0 +1,34 @@
+<webcam
+    *ngIf="!currentImage"
+    (initError)="handleInitError($event)"
+    (imageCapture)="handleImage($event)"
+    [trigger]="triggerObservable"
+    [mirrorImage]="'never'"
+    [imageQuality]="1"
+    [allowCameraSwitch]="multipleWebcamsAvailable"
+    [switchCamera]="nextWebcamObservable"
+    [width]="300"
+    (cameraSwitched)="cameraWasSwitched($event)"
+></webcam>
+<img
+    *ngIf="currentImage"
+    src="{{ currentImage.imageAsDataUrl }}"
+    width="300"
+    alt=""
+/>
+<div *ngIf="error" class="tw-my-4">
+    {{ error | json }}
+    <div *ngIf="error.message === 'Could not start video source'">
+        <app-button
+            label="Cambiar Camara"
+            (click)="showNextWebcam(true)"
+        ></app-button>
+    </div>
+</div>
+<div class="tw-flex tw-justify-center" *ngIf="!currentImage">
+    <app-button label="Tomar" (click)="triggerSnapshot()"></app-button>
+</div>
+<div class="tw-flex tw-justify-between" *ngIf="currentImage">
+    <app-button label="Guardar" (click)="Save()"></app-button>
+    <app-button label="Tomar Otra" (click)="Clear()"></app-button>
+</div>

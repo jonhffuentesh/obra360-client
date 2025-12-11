@@ -1,0 +1,11 @@
+<div class="upload-container">
+    <input type="file" #fileInput (change)="onImageSelect($event)" style="display: none" />
+<app-button label="Cargar" (click)="fileInput.click()">Subir Imagen</app-button>
+
+
+
+    <div *ngIf="imagePreview" class="image-preview">
+        <img [src]="imagePreview" alt="Vista previa de la imagen" />
+        <app-button label="Eliminar"  (click)="clearImage()">Eliminar Imagen</app-button>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+<div class="tw-flex tw-gap-2">
+    <app-button
+        label="{{ scanActive ? 'Detener' : label }}"
+        [showIcon]="true"
+        icon="pi pi-qrcode"
+        (clicked)="scanActive ? stopScann() : open()"
+        [disabled]="disable"
+    ></app-button>
+</div>
+<p-dialog
+    header="{{ title }}"
+    [modal]="true"
+    [(visible)]="visible"
+    [style]="{ width: '23rem' }"
+    (onShow)="scann()"
+    (onHide)="stopScann()"
+>
+    <div class="tw-flex tw-justify-center tw-gap-3 tw-mb-2">
+        <div class="flex align-items-center">
+            <p-radioButton
+                name="group"
+                [value]="false"
+                [(ngModel)]="multiple"
+                [autofocus]="false"
+                inputId="ingredient1"
+            />
+            <label for="ingredient1" class="ml-2"> Uno a uno </label>
+        </div>
+
+        <div class="flex align-items-center">
+            <p-radioButton
+                name="group"
+                [autofocus]="false"
+                [value]="true"
+                [(ngModel)]="multiple"
+                inputId="ingredient2"
+            />
+            <label for="ingredient2" class="ml-2"> Multiple </label>
+        </div>
+    </div>
+
+    <video class="tw-w-80" id="qr-video-{{ id }}"></video>
+    <div class="tw-flex tw-gap-2 tw-mt-2">
+        <app-button
+            label="{{ scanActive ? 'Detener' : label }}"
+            [showIcon]="true"
+            icon="pi pi-qrcode"
+            (clicked)="scanActive ? stopScann() : scann()"
+        ></app-button>
+    </div>
+</p-dialog>

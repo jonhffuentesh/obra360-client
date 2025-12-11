@@ -1,0 +1,93 @@
+// Estilos personalizados para el dashboard
+:host {
+  display: block;
+  width: 100%;
+}
+
+// Animaciones para las tarjetas
+.p-card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Estilos para las métricas principales
+.metric-card {
+  .p-card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 8px 8px 0 0;
+  }
+}
+
+// Estilos para la tabla
+.p-datatable {
+  .p-datatable-thead > tr > th {
+    background-color: #f8fafc;
+    border-bottom: 2px solid #e2e8f0;
+    font-weight: 600;
+    color: #374151;
+  }
+  
+  .p-datatable-tbody > tr:hover {
+    background-color: #f1f5f9;
+  }
+}
+
+// Estilos para las barras de progreso
+.p-progressbar {
+  height: 8px;
+  border-radius: 4px;
+  
+  &.p-progressbar-danger .p-progressbar-value {
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+  }
+  
+  &.p-progressbar-warning .p-progressbar-value {
+    background: linear-gradient(90deg, #f59e0b, #d97706);
+  }
+  
+  &.p-progressbar-success .p-progressbar-value {
+    background: linear-gradient(90deg, #10b981, #059669);
+  }
+}
+
+// Estilos para los tags
+.p-tag {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .p-card {
+    margin-bottom: 1rem;
+  }
+}
+
+// Dark mode support
+.dark {
+  .p-card {
+    background-color: #1f2937;
+    color: #f9fafb;
+  }
+  
+  .p-datatable-thead > tr > th {
+    background-color: #374151;
+    color: #f9fafb;
+    border-bottom-color: #4b5563;
+  }
+  
+  .p-datatable-tbody > tr:hover {
+    background-color: #374151;
+  }
+}

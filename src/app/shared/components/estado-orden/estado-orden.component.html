@@ -1,0 +1,11 @@
+<p-badge
+    styleClass="tw-text-nowrap"
+    [value]="estado | uppercase"
+    [severity]="
+        estado === estados.realizado
+            ? 'success'
+            : estado === estados.pendiente
+            ? 'warning'
+            : 'help'
+    "
+></p-badge>

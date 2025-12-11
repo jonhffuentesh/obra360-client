@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <style>
+    .mesa-fill { fill: currentColor; }
+    .silla-fill { fill: #D1D1D1; /* Color gris para las sillas */ }
+  </style>
+  <g transform="translate(50 50)">
+    <!-- Mesa (Cuadrado rotado) -->
+    <rect class="mesa-fill" x="-30" y="-30" width="60" height="60" transform="rotate(45)" rx="5" ry="5"/>
+
+    <!-- Sillas (Rectángulos rotados) -->
+    <!-- Silla Superior -->
+    <rect class="silla-fill" x="-12.5" y="-45" width="25" height="10" transform="rotate(45)" rx="3" ry="3"/>
+    <!-- Silla Inferior -->
+    <rect class="silla-fill" x="-12.5" y="35" width="25" height="10" transform="rotate(45)" rx="3" ry="3"/>
+    <!-- Silla Izquierda -->
+    <rect class="silla-fill" x="-45" y="-12.5" width="10" height="25" transform="rotate(45)" rx="3" ry="3"/>
+    <!-- Silla Derecha -->
+    <rect class="silla-fill" x="35" y="-12.5" width="10" height="25" transform="rotate(45)" rx="3" ry="3"/>
+  </g>
+</svg> 

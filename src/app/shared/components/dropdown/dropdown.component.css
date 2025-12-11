@@ -1,0 +1,15 @@
+::ng-deep .p-dropdown-panel {
+    @apply tw-bg-white tw-border tw-border-green-400 tw-shadow-md;
+}
+
+::ng-deep .p-dropdown-item {
+    @apply tw-py-2 tw-px-4 tw-cursor-pointer hover:tw-bg-green-500 hover:tw-text-orange-500;
+}
+
+::ng-deep .p-dropdown-item.p-highlight {
+    @apply tw-bg-orange-600 tw-text-white;
+}
+
+::ng-deep .p-dropdown-item:hover {
+    @apply tw-bg-green-500 tw-text-purple-oxi;
+}

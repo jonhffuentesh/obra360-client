@@ -1,0 +1,21 @@
+<!-- [(ngModel)]="selectedCountry" -->
+<div class="tw-mb-4">
+    <label for="">Ingresar</label>
+</div>
+<p-autoComplete
+    [formControl]="control"
+    [dropdown]="true"
+    [suggestions]="opcionesFiltradas"
+    (completeMethod)="filterCountry($event)"
+    [optionLabel]="label"
+    appendTo="body"
+    styleClass="tw-w-full tw-text-wrap"
+/>
+
+<div class="tw-my-4">
+    <app-button
+        label="Seleccionar"
+        [disabled]="control.invalid"
+        (clicked)="onSelect()"
+    ></app-button>
+</div>

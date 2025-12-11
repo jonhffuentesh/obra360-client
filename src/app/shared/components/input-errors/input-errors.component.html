@@ -1,0 +1,76 @@
+<small
+    *ngIf="
+        formControlInput.invalid &&
+        formControlInput.hasError('required') &&
+        (formControlInput.dirty || formControlInput.touched)
+    "
+    class="tw-text-red-500"
+    >El campo es requerido.</small
+>
+<small
+    *ngIf="
+        formControlInput.invalid &&
+        formControlInput.hasError('maxlength') &&
+        (formControlInput.dirty || formControlInput.touched)
+    "
+    class="tw-text-red-500"
+    >No puede exceder los
+    {{
+        formControlInput.errors?.['maxlength'].requiredLength }}
+    caracteres.
+</small>
+<small
+    *ngIf="
+        formControlInput.invalid &&
+        formControlInput.hasError('minlength') &&
+        (formControlInput.dirty || formControlInput.touched)
+    "
+    class="tw-text-red-500"
+    >No puede ser menor a
+    {{
+        formControlInput.errors?.['minlength'].requiredLength }}
+    caracteres.
+</small>
+<small
+    *ngIf="
+        formControlInput.invalid &&
+        formControlInput.hasError('max') &&
+        (formControlInput.dirty || formControlInput.touched)
+    "
+    class="tw-text-red-500"
+    >El valor no puede ser mayor a
+    {{
+        formControlInput.errors?.['max'].max }}
+</small>
+<small
+    *ngIf="
+        formControlInput.invalid &&
+        formControlInput.hasError('min') &&
+        (formControlInput.dirty || formControlInput.touched)
+    "
+    class="tw-text-red-500"
+    >El valor no puede ser menor a
+    {{
+        formControlInput.errors?.['min'].min }}</small
+>
+<small
+    *ngIf="
+        formControlInput.invalid &&
+        formControlInput.hasError('email') &&
+        (formControlInput.dirty || formControlInput.touched)
+    "
+    class="tw-text-red-500"
+>
+    El correo electrónico no es válido.
+</small>
+<small
+    *ngIf="
+        formControlInput.invalid &&
+        formControlInput.hasError('notUnique') &&
+        (formControlInput.dirty || formControlInput.touched)
+    "
+    class="tw-text-red-500"
+>
+    La opcion ya fue seleccionada anteriormente
+</small>
+<!-- {{ formControlInput.errors | json }} -->

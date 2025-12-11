@@ -1,0 +1,32 @@
+<div class="tw-flex tw-flex-col {{ class }}">
+    <label class="{{ labelClass }} tw-mb-2" *ngIf="label">
+        {{ label }}<em *ngIf="required">*</em>
+    </label>
+    <p-dropdown
+        [options]="transformedOptions"
+        [formControl]="formControlInput"
+        optionLabel="{{ optionLabel }}"
+        optionValue="{{ optionValue }}"
+        [filter]="filter"
+        [editable]="editable"
+        [filterBy]="optionLabel"
+        [virtualScroll]="lazy"
+        [virtualScrollItemSize]="38"
+        [placeholder]="placeholder"
+        appendTo="body"
+        styleClass="custom-dropdown {{ styleClass }} tw-w-full"
+        (onChange)="onSelectionChange($event)"
+    ></p-dropdown>
+    <div
+        *ngIf="
+            formControlInput.invalid &&
+            (formControlInput.dirty || formControlInput.touched) &&
+            showError
+        "
+        class="tw-min-h-4"
+    >
+        <app-input-errors
+            [formControlInput]="formControlInput"
+        ></app-input-errors>
+    </div>
+</div>

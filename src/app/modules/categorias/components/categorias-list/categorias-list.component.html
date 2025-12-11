@@ -1,0 +1,19 @@
+<p-toast></p-toast>
+<p-confirmDialog header="Confirmación" icon="pi pi-exclamation-triangle" acceptLabel="Sí" rejectLabel="No"></p-confirmDialog>
+<div class="card">
+    <app-header-title title="Listado de Categorías"></app-header-title>
+    <app-table
+        [data]="categorias"
+        [configTable]="config"
+        [menuInput]="menu"
+        [loading]="loading"
+        [totalCount]="totalCount"
+        (onPaginacion)="OnPagination($event)"
+        (onGenerarExcel)="onGenerarExcel($event)"
+    ></app-table>
+</div>
+<app-button
+    label="Agregar Categoría"
+    [icon]="'pi pi-plus'"
+    routerLink="/categorias/crear"
+></app-button>

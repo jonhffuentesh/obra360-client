@@ -1,0 +1,229 @@
+<p-toast position="top-right"></p-toast>
+<p-confirmDialog header="Confirmación" icon="pi pi-exclamation-triangle" acceptLabel="Sí" rejectLabel="No"></p-confirmDialog>
+
+<div class="container mx-auto p-4">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Card del Formulario -->
+        <p-card header="Nueva Categoría" styleClass="shadow-lg">
+            <ng-template pTemplate="header">
+                <div class="bg-primary-50 p-4 border-b">
+                    <h2 class="text-xl font-semibold text-primary-700">Crear Nueva Categoría</h2>
+                    <p class="text-sm text-gray-600 mt-1">Complete el formulario para crear una nueva categoría de productos</p>
+                </div>
+            </ng-template>
+
+            <form [formGroup]="categoriaForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6 p-4">
+                <!-- Nombre -->
+                <div class="flex flex-col gap-2">
+                    <label for="nombre" class="font-medium text-gray-700 flex items-center gap-1">
+                        Nombre <span class="text-red-500">*</span>
+                        <i class="pi pi-info-circle text-gray-400 cursor-help" pTooltip="El nombre debe tener al menos 3 caracteres" tooltipPosition="right"></i>
+                    </label>
+                    <span class="p-input-icon-right w-full">
+                        <i class="pi pi-tag" *ngIf="!categoriaForm.get('nombre')?.value"></i>
+                        <input
+                            id="nombre"
+                            type="text"
+                            pInputText
+                            formControlName="nombre"
+                            class="w-full p-2 border rounded-lg transition-colors duration-200"
+                            [ngClass]="{
+                                'border-red-500 focus:border-red-500 focus:ring-red-500': categoriaForm.get('nombre')?.invalid && categoriaForm.get('nombre')?.touched,
+                                'border-green-500 focus:border-green-500 focus:ring-green-500': categoriaForm.get('nombre')?.valid && categoriaForm.get('nombre')?.touched
+                            }"
+                            placeholder="Ingrese el nombre de la categoría"
+                            autocomplete="off"
+                        />
+                    </span>
+                    <small class="text-red-500 flex items-center gap-1" *ngIf="categoriaForm.get('nombre')?.invalid && categoriaForm.get('nombre')?.touched">
+                        <i class="pi pi-exclamation-circle"></i>
+                        <span *ngIf="categoriaForm.get('nombre')?.errors?.['required']">El nombre es requerido</span>
+                        <span *ngIf="categoriaForm.get('nombre')?.errors?.['minlength']">Debe tener al menos 3 caracteres</span>
+                    </small>
+                </div>
+
+                <!-- Descripción -->
+                <div class="flex flex-col gap-2">
+                    <label for="descripcion" class="font-medium text-gray-700 flex items-center gap-1">
+                        Descripción <span class="text-red-500">*</span>
+                        <i class="pi pi-info-circle text-gray-400 cursor-help" pTooltip="La descripción debe tener al menos 5 caracteres" tooltipPosition="right"></i>
+                    </label>
+                    <span class="p-input-icon-right w-full">
+                        <i class="pi pi-align-left" *ngIf="!categoriaForm.get('descripcion')?.value"></i>
+                        <textarea
+                            id="descripcion"
+                            pTextarea
+                            formControlName="descripcion"
+                            rows="3"
+                            class="w-full p-2 border rounded-lg transition-colors duration-200 resize-none"
+                            [ngClass]="{
+                                'border-red-500 focus:border-red-500 focus:ring-red-500': categoriaForm.get('descripcion')?.invalid && categoriaForm.get('descripcion')?.touched,
+                                'border-green-500 focus:border-green-500 focus:ring-green-500': categoriaForm.get('descripcion')?.valid && categoriaForm.get('descripcion')?.touched
+                            }"
+                            placeholder="Ingrese una descripción detallada de la categoría"
+                        ></textarea>
+                    </span>
+                    <small class="text-red-500 flex items-center gap-1" *ngIf="categoriaForm.get('descripcion')?.invalid && categoriaForm.get('descripcion')?.touched">
+                        <i class="pi pi-exclamation-circle"></i>
+                        <span *ngIf="categoriaForm.get('descripcion')?.errors?.['required']">La descripción es requerida</span>
+                        <span *ngIf="categoriaForm.get('descripcion')?.errors?.['minlength']">Debe tener al menos 5 caracteres</span>
+                    </small>
+                </div>
+
+                <!-- Observaciones -->
+                <div class="flex flex-col gap-2">
+                    <label for="observaciones" class="font-medium text-gray-700 flex items-center gap-1">
+                        Observaciones
+                        <i class="pi pi-info-circle text-gray-400 cursor-help" pTooltip="Información adicional opcional sobre la categoría" tooltipPosition="right"></i>
+                    </label>
+                    <span class="p-input-icon-right w-full">
+                        <i class="pi pi-comment" *ngIf="!categoriaForm.get('observaciones')?.value"></i>
+                        <textarea
+                            id="observaciones"
+                            pTextarea
+                            formControlName="observaciones"
+                            rows="3"
+                            class="w-full p-2 border rounded-lg transition-colors duration-200 resize-none"
+                            placeholder="Ingrese observaciones adicionales (opcional)"
+                        ></textarea>
+                    </span>
+                </div>
+
+                <!-- Botones -->
+                <div class="flex justify-end gap-3 mt-4 pt-4 border-t">
+                    <p-button 
+                        label="Cancelar" 
+                        icon="pi pi-times" 
+                        styleClass="p-button-secondary p-button-outlined p-button-rounded" 
+                        (onClick)="router.navigate(['/categorias'])" 
+                        [disabled]="loading"
+                        pTooltip="Volver a la lista de categorías"
+                        tooltipPosition="top">
+                    </p-button>
+                    <p-button 
+                        label="Guardar" 
+                        icon="pi pi-check" 
+                        type="submit" 
+                        styleClass="p-button-primary p-button-rounded" 
+                        [disabled]="categoriaForm.invalid || loading" 
+                        [loading]="loading"
+                        pTooltip="Guardar categoría"
+                        tooltipPosition="top">
+                    </p-button>
+                </div>
+            </form>
+        </p-card>
+
+        <!-- Card de la Tabla -->
+        <p-card header="Categorías" styleClass="shadow-lg">
+            <ng-template pTemplate="header">
+                <div class="bg-primary-50 p-4 border-b">
+                    <h2 class="text-xl font-semibold text-primary-700">Lista de Categorías</h2>
+                    <p class="text-sm text-gray-600 mt-1">Gestiona las categorías de productos</p>
+                </div>
+            </ng-template>
+
+            <!-- Barra de búsqueda -->
+            <div class="mb-4">
+                <span class="p-input-icon-left w-full">
+                    <i class="pi pi-search"></i>
+                    <input
+                        type="text"
+                        pInputText
+                        class="w-full p-2 border rounded-lg"
+                        placeholder="Buscar categorías..."
+                        (input)="filtrarCategorias($event)"
+                    />
+                </span>
+            </div>
+
+            <!-- Tabla -->
+            <div class="overflow-y-auto max-h-96">
+                <p-table
+                    [value]="categoriasFiltradas"
+                    [paginator]="true"
+                    [rows]="10"
+                    [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} categorías"
+                    [rowsPerPageOptions]="[10, 25, 50]"
+                    styleClass="p-datatable-sm"
+                    [loading]="loading"
+                    [globalFilterFields]="['nombre', 'descripcion']"
+                >
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th style="width: 3rem"></th>
+                            <th pSortableColumn="nombre">Nombre <p-sortIcon field="nombre"></p-sortIcon></th>
+                            <th pSortableColumn="descripcion">Descripción <p-sortIcon field="descripcion"></p-sortIcon></th>
+                            <th style="width: 8rem">Acciones</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-categoria>
+                        <tr>
+                            <td>
+                                <button
+                                    type="button"
+                                    pButton
+                                    pRipple
+                                    class="p-button-rounded p-button-text p-button-plain"
+                                    (click)="toggleRow(categoria)"
+                                    [pTooltip]="categoria.expanded ? 'Contraer' : 'Expandir'"
+                                    [title]="categoria.expanded ? 'Contraer' : 'Expandir'"
+                                    aria-label="Expandir o contraer fila"
+                                >
+                                    <i class="pi" [ngClass]="categoria.expanded ? 'pi-chevron-down' : 'pi-chevron-right'"></i>
+                                </button>
+                            </td>
+                            <td>{{ categoria.nombre }}</td>
+                            <td>{{ categoria.descripcion }}</td>
+                            <td>
+                                <div class="flex gap-2">
+                                    <button
+                                        pButton
+                                        pRipple
+                                        type="button"
+                                        icon="pi pi-pencil"
+                                        class="p-button-rounded p-button-text p-button-plain"
+                                        (click)="editarCategoria(categoria)"
+                                        pTooltip="Editar"
+                                        title="Editar"
+                                    ></button>
+                                    <button
+                                        pButton
+                                        pRipple
+                                        type="button"
+                                        icon="pi pi-trash"
+                                        class="p-button-rounded p-button-text p-button-danger"
+                                        (click)="confirmarEliminar(categoria)"
+                                        pTooltip="Eliminar"
+                                        title="Eliminar"
+                                    ></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="4" class="text-center p-4">
+                                <div class="flex flex-col items-center justify-center gap-2 text-gray-500">
+                                    <i class="pi pi-inbox text-4xl"></i>
+                                    <p>No se encontraron categorías</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="loadingbody">
+                        <tr>
+                            <td colspan="4" class="text-center p-4">
+                                <div class="flex items-center justify-center gap-2">
+                                    <p-progressSpinner strokeWidth="4" styleClass="w-8 h-8"></p-progressSpinner>
+                                    <span>Cargando categorías...</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+        </p-card>
+    </div>
+</div>

@@ -1,0 +1,59 @@
+<div class="login-container">
+    <!-- Sección de imagen (2/3) -->
+    <div class="image-section">
+        <div class="background-image">
+            <!-- Overlay morado para mejor contraste -->
+            <div class="overlay"></div>
+
+            <!-- Mensaje de bienvenida sobre la imagen -->
+            <div class="welcome-text">
+                <div class="welcome-content">
+                    <h1 class="welcome-title">Bienvenido</h1>
+                    <p class="welcome-message">
+                        Lo que haces cada día, transforma el mundo de alguien.<br />
+                        Tu esfuerzo deja huella, incluso cuando no lo ves.
+                    </p>    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección del formulario (1/3) -->
+    <div class="form-section">
+        <div class="form-container">
+            <!-- Logo -->
+            <div class="logo-section">
+                <img src="assets/images/logo.png" alt="Logo SICMA" class="logo-image" />
+                <p class="instruction-text">Inicia sesión para continuar</p>
+            </div>
+
+            <!-- Formulario -->
+            <div [formGroup]="loginForm" class="form-fields">
+                <!-- Campo Usuario -->
+                <div>
+                    <label for="email1" class="field-label"> Usuario </label>
+                    <input id="email1" type="text" placeholder="Usuario o Correo Electrónico" pInputText formControlName="username" class="field-input" />
+                </div>
+
+                <!-- Campo Contraseña -->
+                <div>
+                    <label for="password1" class="field-label"> Contraseña </label>
+                    <p-password id="password1" formControlName="password" placeholder="Contraseña" [toggleMask]="false" [feedback]="false" inputStyleClass="field-input"></p-password>
+                </div>
+
+                <!-- Opciones -->
+                <div class="form-options">
+                    <div class="checkbox-container">
+                        <p-checkbox id="rememberme1" [binary]="true" styleClass="mr-2"></p-checkbox>
+                        <label for="rememberme1" class="checkbox-label"> Mantener mi sesión iniciada </label>
+                    </div>
+                    <a class="forgot-password-link"> ¿Olvidaste tu contraseña? </a>
+                </div>
+
+                <!-- Botón -->
+                <button pButton pRipple label="Iniciar Sesión" title="Iniciar Sesión" class="login-button" (click)="login()" [disabled]="loading"></button>
+            </div>
+        </div>
+    </div>
+</div>
+<p-toast></p-toast>

@@ -1,0 +1,258 @@
+<ng-container [ngSwitch]="col.type">
+    <ng-container *ngSwitchCase="'text'">
+        <ng-container [ngSwitch]="col.pipe">
+            <ng-container *ngSwitchCase="'uppercase'">
+                {{ row[col.field] | uppercase }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'lowercase'">
+                {{ row[col.field] | lowercase }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'substring'">
+                <div [pTooltip]="row[col.field]">
+                    {{ row[col.field]?.length > 20 ? row[col.field].substring(0, 20) + '...' : row[col.field] }}
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'editor'">
+                <div [pTooltip]="row[col.field]">
+                    {{ row[col.field]?.length > 20 ? row[col.field].substring(0, 20) + '...' : row[col.field] }}
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'editorModal'">
+                <div (click)="showTooltip = !showTooltip">
+                    <label class="tw-cursor-pointer hover:tw-bg-orange-50 tw-rounded tw-p-2" for="" (click)="opEditor.toggle($event)">
+                        {{ row[col.field]?.length > 20 ? row[col.field].substring(0, 20) + '...' : row[col.field] }}
+                    </label>
+
+                    <p-overlayPanel #opEditor>
+                        <div class="tw-flex tw-flex-column tw-gap-3">
+                            <label for=""> {{ row[col.field] }}</label>
+                        </div>
+                    </p-overlayPanel>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'s3Url'">
+                <!-- <a
+                    *ngIf="row[col.field]"
+                    href="{{ row[col.field] | s3Url }}"
+                    target="_blank"
+                    ><button class="govco-download"></button
+                ></a> -->
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'webUrl'">
+                <!-- <a
+                    *ngIf="row[col.field]"
+                    href="{{ row[col.field] | webUrl }}"
+                    target="_blank"
+                    ><button class="govco-globe-americas"></button
+                ></a> -->
+            </ng-container>
+            <ng-container *ngSwitchCase="'colorText'">
+                <div class="tw-rounded-lg tw-py-1 tw-px-2" [ngStyle]="{ 'background-color': row[col.field]?.color || '#fff' }">
+                    {{ row[col.field]?.nombre }}
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'estados'">
+                <label [class]="getClassForEstado(row[col.field])" for=""> {{ row[col.field] }}</label>
+            </ng-container>
+            <ng-container *ngSwitchCase="'estadoTramite'">
+                <!-- <div>
+                    <app-etiqueta-gov
+                        [label]="row[col.field]"
+                        [severity]="
+                            row[col.field] === 'Finalizado'
+                                ? 'completado'
+                                : row[col.field] === 'Anulado'
+                                ? 'error'
+                                : row[col.field] === 'Rechazado'
+                                ? 'error'
+                                : 'pendiente'
+                        "
+                    ></app-etiqueta-gov>
+                </div> -->
+            </ng-container>
+
+            <!-- Default for text type if no specific pipe matches -->
+            <ng-container *ngSwitchDefault>
+                <div [ngClass]="{
+                    'text-left': !col.textAlign || col.textAlign === 'left',
+                    'text-center': col.textAlign === 'center',
+                    'text-right': col.textAlign === 'right'
+                }">
+                    <ng-container *ngIf="col.bodyTemplate">
+                        <span [innerHTML]="col.bodyTemplate(row)"></span>
+                    </ng-container>
+                    <ng-container *ngIf="!col.bodyTemplate">
+                        <span>{{ row[col.field] }}</span>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'date'">
+        <ng-container [ngSwitch]="col.pipe">
+            <ng-container *ngSwitchCase="'date'">
+                <ng-container *ngIf="col.pipeArgs && col.pipeArgs.length > 0">
+                    <div class="text-center">
+                        {{ formatDate(row[col.field], col.pipeArgs[0], col.pipeArgs[1]) }}
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="!col.pipeArgs || col.pipeArgs.length === 0">
+                    <div class="text-center">
+                        {{ row[col.field] | date: 'mediumDate' }}
+                    </div>
+                </ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="'timestamp'">
+                <div class="text-center">
+                    {{ row[col.field] | date: 'yyyy/MM/dd HH:mm' }}
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'dateWithoutTime'">
+                <!-- <label for="">{{ row[col.field] | dateWithoutTime : true }}</label> -->
+            </ng-container>
+            <ng-container *ngSwitchCase="'dateToNow'">
+                <div class="text-center">
+                    {{ row[col.field] | dateToNow }}
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'dateToNowBadge'">
+                <div class="text-center">
+                    <app-fecha-badge-conteo [fecha]="row[col.field]" />
+                </div>
+            </ng-container>
+            <!-- Default for date type if no specific pipe matches -->
+            <ng-container *ngSwitchDefault>
+                <div class="text-center">
+                    {{ row[col.field] | date }}
+                </div>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'boolean'">
+        @if (row[col.field]) {
+            <span class="etiqueta-govco completado"> SI </span>
+        } @else {
+            <span class="etiqueta-govco pendiente"> NO </span>
+        }
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'numeric'">
+        <ng-container [ngSwitch]="col.pipe">
+            <ng-container *ngSwitchCase="'number'">
+                <div [ngClass]="{
+                    'text-left': !col.textAlign || col.textAlign === 'left',
+                    'text-center': col.textAlign === 'center',
+                    'text-right': col.textAlign === 'right'
+                }">
+                    {{ row[col.field] | number }}
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'currency'">
+                <!-- <label for=""> {{ row[col.field] | localCurrency }}</label> -->
+            </ng-container>
+            <ng-container *ngSwitchCase="'localCurrency'">
+                <div [ngClass]="{
+                    'text-left': !col.textAlign || col.textAlign === 'left',
+                    'text-center': col.textAlign === 'center',
+                    'text-right': col.textAlign === 'right'
+                }">
+                    {{ row[col.field] | localCurrency }}
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+                <div [ngClass]="{
+                    'text-left': !col.textAlign || col.textAlign === 'left',
+                    'text-center': col.textAlign === 'center',
+                    'text-right': col.textAlign === 'right'
+                }">
+                    {{ row[col.field] }}
+                </div>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'object'">
+        <ng-container [ngSwitch]="col.pipe">
+            <ng-container *ngSwitchCase="'isNotAplanar'">
+                <div (click)="showTooltip = !showTooltip">
+                    <label *ngIf="isObjectNotEmpty(row[col.field])" class="tw-cursor-pointer hover:tw-bg-orange-50 tw-rounded tw-p-2" (click)="opNoAplanar.toggle($event)">
+                        {{ formatObjectForDisplay(row[col.field]) }}
+                    </label>
+
+                    <p-overlayPanel #opNoAplanar>
+                        <div class="tw-flex tw-flex-column tw-gap-3">
+                            <label for="">{{ row[col.field] | json }}</label>
+                        </div>
+                    </p-overlayPanel>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'cantidad'">
+                <div>
+                    <div class="">
+                        <p-badge value="{{ row[col.field] ? row[col.field].length : 0 }}"></p-badge>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'cantidadModal'">
+                <div (click)="op.toggle($event)" class="hover:tw-cursor-pointer">
+                    <p-badge value="{{ row[col.field] ? row[col.field].length : 0 }}"></p-badge>
+                </div>
+                <p-overlayPanel #op class="h-48">
+                    <p-table [value]="row[col.field] || []" [rows]="5" [paginator]="true" [responsive]="true" [tableStyle]="{ 'max-width': '50rem' }">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th *ngFor="let column of col.columnasModal">
+                                    {{ column.header }}
+                                </th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-subtramite>
+                            <tr>
+                                <td *ngFor="let column of col.columnasModal">
+                                    <app-default-td-table [col]="column" [row]="subtramite"></app-default-td-table>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </p-overlayPanel>
+            </ng-container>
+            <ng-container *ngSwitchCase="'imagen'">
+                <!-- @if (row[col.field] ) {
+                <p-avatar
+                    [image]="row[col.field] ? (row[col.field] | s3Url) : ''"
+                    styleClass="mr-2"
+                    size="large"
+                    shape="circle"
+                />
+                } -->
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'color'">
+                <div class="tw-h-8 tw-w-8 tw-rounded-full" [ngStyle]="{ 'background-color': row[col.field] || '#fff' }"></div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'estadoOrden'">
+                <app-estado-orden [estado]="row[col.field]"></app-estado-orden>
+            </ng-container>
+
+            <!-- Default for object type if no specific pipe matches -->
+            <ng-container *ngSwitchDefault>
+                {{ row[col.field] | json }}
+            </ng-container>
+        </ng-container>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'select'">
+        {{ row[col.field]?.nombre || row[col.field] }}
+    </ng-container>
+
+    <!-- Add other switch cases for other types if needed -->
+
+    <!-- Fallback for types or pipes not explicitly handled -->
+    <ng-container *ngSwitchDefault>
+        <!-- If col.type is not handled above, just display the field value -->
+        {{ row[col.field] }}
+    </ng-container>
+</ng-container>

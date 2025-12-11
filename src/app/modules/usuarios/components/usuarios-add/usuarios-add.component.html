@@ -1,0 +1,332 @@
+<!-- Loading Overlay -->
+<div *ngIf="loading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <p-progressSpinner strokeWidth="4" styleClass="w-12 h-12"></p-progressSpinner>
+</div>
+
+<div class="container mx-auto p-4 max-w-4xl">
+    <p-card header="Nuevo Usuario" styleClass="shadow-lg">
+        <ng-template pTemplate="header">
+            <div class="bg-primary-50 p-4 border-b">
+                <h2 class="text-xl font-semibold text-primary-700">Agregar Nuevo Usuario</h2>
+                <p class="text-sm text-gray-600 mt-1">Complete el formulario para crear un usuario</p>
+            </div>
+        </ng-template>
+
+        <form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6 p-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Columna Izquierda -->
+                <div class="space-y-6">
+                    <!-- Nombre -->
+                    <div class="flex flex-col gap-2">
+                        <label for="nombres" class="font-medium text-gray-700 flex items-center gap-1">
+                            Nombres <span class="text-red-500">*</span>
+                            <i class="pi pi-info-circle text-gray-400 cursor-help custom-tooltip" pTooltip="Ingrese los nombres del usuario." tooltipPosition="right"></i>
+                        </label>
+                        <input
+                            id="nombres"
+                            type="text"
+                            pInputText
+                            formControlName="nombres"
+                            class="w-full p-2 border rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            placeholder="Ingrese los nombres"
+                            autocomplete="off"
+                        />
+                        <small class="text-red-500 flex items-center gap-1" *ngIf="usuarioForm.get('nombres')?.invalid && usuarioForm.get('nombres')?.touched">
+                            <i class="pi pi-exclamation-circle"></i>
+                            <span *ngIf="usuarioForm.get('nombres')?.errors?.['required']">Los nombres son requeridos</span>
+                        </small>
+                    </div>
+
+                    <!-- Apellidos -->
+                    <div class="flex flex-col gap-2">
+                        <label for="apellidos" class="font-medium text-gray-700 flex items-center gap-1">
+                            Apellidos <span class="text-red-500">*</span>
+                            <i class="pi pi-info-circle text-gray-400 cursor-help custom-tooltip" pTooltip="Ingrese los apellidos del usuario." tooltipPosition="right"></i>
+                        </label>
+                        <input
+                            id="apellidos"
+                            type="text"
+                            pInputText
+                            formControlName="apellidos"
+                            class="w-full p-2 border rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            placeholder="Ingrese los apellidos"
+                            autocomplete="off"
+                        />
+                        <small class="text-red-500 flex items-center gap-1" *ngIf="usuarioForm.get('apellidos')?.invalid && usuarioForm.get('apellidos')?.touched">
+                            <i class="pi pi-exclamation-circle"></i>
+                            <span *ngIf="usuarioForm.get('apellidos')?.errors?.['required']">Los apellidos son requeridos</span>
+                        </small>
+                    </div>
+
+                    <!-- Fecha de Nacimiento -->
+                    <div class="flex flex-col gap-2">
+                        <label for="fechaNacimiento" class="font-medium text-gray-700 flex items-center gap-1">
+                            Fecha de Nacimiento <span class="text-red-500">*</span>
+                            <i class="pi pi-info-circle text-gray-400 cursor-help custom-tooltip" pTooltip="Seleccione la fecha de nacimiento." tooltipPosition="right"></i>
+                        </label>
+                        <p-datepicker
+                            id="fechaNacimiento"
+                            formControlName="fechaNacimiento"
+                            [showIcon]="true"
+                            dateFormat="dd/mm/yy"
+                            [maxDate]="maxDate"
+                            placeholder="Seleccione la fecha"
+                            [style]="{'width':'100%'}"
+                            [inputStyleClass]="'w-full p-2 border rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500'"
+                        ></p-datepicker>
+                        <small class="text-red-500 flex items-center gap-1" *ngIf="usuarioForm.get('fechaNacimiento')?.invalid && usuarioForm.get('fechaNacimiento')?.touched">
+                            <i class="pi pi-exclamation-circle"></i>
+                            <span *ngIf="usuarioForm.get('fechaNacimiento')?.errors?.['required']">La fecha de nacimiento es requerida</span>
+                        </small>
+                    </div>
+
+                    <!-- Tipo de Identificación -->
+                    <div class="flex flex-col gap-2">
+                        <label for="tipoIdentificacionId" class="font-medium text-gray-700 flex items-center gap-1">
+                            Tipo de Identificación <span class="text-red-500">*</span>
+                            <i class="pi pi-info-circle text-gray-400 cursor-help custom-tooltip" pTooltip="Seleccione el tipo de identificación." tooltipPosition="right"></i>
+                        </label>
+                        <p-select
+                            id="tipoIdentificacionId"
+                            [options]="tiposIdentificacion"
+                            formControlName="tipoIdentificacionId"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            placeholder="Seleccione un tipo"
+                            class="w-full border rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        ></p-select>
+                        <small class="text-red-500 flex items-center gap-1" *ngIf="usuarioForm.get('tipoIdentificacionId')?.invalid && usuarioForm.get('tipoIdentificacionId')?.touched">
+                            <i class="pi pi-exclamation-circle"></i>
+                            <span *ngIf="usuarioForm.get('tipoIdentificacionId')?.errors?.['required']">El tipo de identificación es requerido</span>
+                        </small>
+                    </div>
+
+                    <!-- Identificación -->
+                    <div class="flex flex-col gap-2">
+                        <label for="identificacion" class="font-medium text-gray-700 flex items-center gap-1">
+                            Identificación <span class="text-red-500">*</span>
+                            <i class="pi pi-info-circle text-gray-400 cursor-help custom-tooltip" pTooltip="Ingrese el número de identificación." tooltipPosition="right"></i>
+                        </label>
+                        <input
+                            id="identificacion"
+                            type="text"
+                            pInputText
+                            formControlName="identificacion"
+                            class="w-full p-2 border rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            placeholder="Ingrese la identificación"
+                            autocomplete="off"
+                        />
+                        <small class="text-red-500 flex items-center gap-1" *ngIf="usuarioForm.get('identificacion')?.invalid && usuarioForm.get('identificacion')?.touched">
+                            <i class="pi pi-exclamation-circle"></i>
+                            <span *ngIf="usuarioForm.get('identificacion')?.errors?.['required']">La identificación es requerida</span>
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Columna Derecha -->
+                <div class="space-y-6">
+                    <!-- Correo -->
+                    <div class="flex flex-col gap-2">
+                        <label for="correo" class="font-medium text-gray-700 flex items-center gap-1">
+                            Correo Electrónico <span class="text-red-500">*</span>
+                            <i class="pi pi-info-circle text-gray-400 cursor-help custom-tooltip" pTooltip="Ingrese el correo electrónico del usuario." tooltipPosition="right"></i>
+                        </label>
+                        <input
+                            id="correo"
+                            type="email"
+                            pInputText
+                            formControlName="correo"
+                            class="w-full p-2 border rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            placeholder="Ingrese el correo electrónico"
+                            autocomplete="off"
+                        />
+                        <small class="text-red-500 flex items-center gap-1" *ngIf="usuarioForm.get('correo')?.invalid && usuarioForm.get('correo')?.touched">
+                            <i class="pi pi-exclamation-circle"></i>
+                            <span *ngIf="usuarioForm.get('correo')?.errors?.['required']">El correo es requerido</span>
+                            <span *ngIf="usuarioForm.get('correo')?.errors?.['email']">Ingrese un correo válido</span>
+                        </small>
+                    </div>
+
+                    <!-- Teléfono -->
+                    <div class="flex flex-col gap-2">
+                        <label for="telefono" class="font-medium text-gray-700 flex items-center gap-1">
+                            Teléfono <span class="text-red-500">*</span>
+                            <i class="pi pi-info-circle text-gray-400 cursor-help custom-tooltip" pTooltip="Ingrese el número de teléfono del usuario." tooltipPosition="right"></i>
+                        </label>
+                        <input
+                            id="telefono"
+                            type="text"
+                            pInputText
+                            formControlName="telefono"
+                            class="w-full p-2 border rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            placeholder="Ingrese el teléfono"
+                            autocomplete="off"
+                        />
+                        <small class="text-red-500 flex items-center gap-1" *ngIf="usuarioForm.get('telefono')?.invalid && usuarioForm.get('telefono')?.touched">
+                            <i class="pi pi-exclamation-circle"></i>
+                            <span *ngIf="usuarioForm.get('telefono')?.errors?.['required']">El teléfono es requerido</span>
+                        </small>
+                    </div>
+
+                    <!-- Dirección -->
+                    <div class="flex flex-col gap-2">
+                        <label for="direccion" class="font-medium text-gray-700 flex items-center gap-1">
+                            Dirección <span class="text-red-500">*</span>
+                            <i class="pi pi-info-circle text-gray-400 cursor-help custom-tooltip" pTooltip="Ingrese la dirección del usuario." tooltipPosition="right"></i>
+                        </label>
+                        <input
+                            id="direccion"
+                            type="text"
+                            pInputText
+                            formControlName="direccion"
+                            class="w-full p-2 border rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            placeholder="Ingrese la dirección"
+                            autocomplete="off"
+                        />
+                        <small class="text-red-500 flex items-center gap-1" *ngIf="usuarioForm.get('direccion')?.invalid && usuarioForm.get('direccion')?.touched">
+                            <i class="pi pi-exclamation-circle"></i>
+                            <span *ngIf="usuarioForm.get('direccion')?.errors?.['required']">La dirección es requerida</span>
+                        </small>
+                    </div>
+
+                    <!-- Departamento -->
+                    <div class="flex flex-col gap-2">
+                        <label for="departamentoId" class="font-medium text-gray-700 flex items-center gap-1">
+                            Departamento <span class="text-red-500">*</span>
+                            <i class="pi pi-info-circle text-gray-400 cursor-help custom-tooltip" pTooltip="Seleccione el departamento." tooltipPosition="right"></i>
+                        </label>
+                        <p-select
+                            id="departamentoId"
+                            [options]="departamentos"
+                            formControlName="departamentoId"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            placeholder="Seleccione un departamento"
+                            class="w-full border rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            (onChange)="onDepartamentoChange($event)"
+                        ></p-select>
+                        <small class="text-red-500 flex items-center gap-1" *ngIf="usuarioForm.get('departamentoId')?.invalid && usuarioForm.get('departamentoId')?.touched">
+                            <i class="pi pi-exclamation-circle"></i>
+                            <span *ngIf="usuarioForm.get('departamentoId')?.errors?.['required']">El departamento es requerido</span>
+                        </small>
+                    </div>
+
+                    <!-- Municipio -->
+                    <div class="flex flex-col gap-2">
+                        <label for="municipioId" class="font-medium text-gray-700 flex items-center gap-1">
+                            Municipio <span class="text-red-500">*</span>
+                            <i class="pi pi-info-circle text-gray-400 cursor-help custom-tooltip" pTooltip="Seleccione el municipio." tooltipPosition="right"></i>
+                        </label>
+                        <p-select
+                            id="municipioId"
+                            [options]="municipios"
+                            formControlName="municipioId"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            placeholder="Seleccione un municipio"
+                            class="w-full border rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        ></p-select>
+                        <small class="text-red-500 flex items-center gap-1" *ngIf="usuarioForm.get('municipioId')?.invalid && usuarioForm.get('municipioId')?.touched">
+                            <i class="pi pi-exclamation-circle"></i>
+                            <span *ngIf="usuarioForm.get('municipioId')?.errors?.['required']">El municipio es requerido</span>
+                        </small>
+                    </div>
+
+                    <!-- Observaciones -->
+                    <div class="flex flex-col gap-2">
+                        <label for="observaciones" class="font-medium text-gray-700 flex items-center gap-1">
+                            Observaciones
+                            <i class="pi pi-info-circle text-gray-400 cursor-help custom-tooltip" pTooltip="Agregue información adicional relevante sobre el usuario." tooltipPosition="right"></i>
+                        </label>
+                        <textarea
+                            id="observaciones"
+                            pTextarea
+                            formControlName="observaciones"
+                            rows="3"
+                            class="w-full p-2 border rounded-lg transition-colors duration-200 resize-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            placeholder="Ingrese observaciones adicionales (opcional)"
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Datos de Acceso al Sistema -->
+            <div class="mt-8 w-full">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Datos de Acceso al Sistema</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+                    <!-- Usuario -->
+                    <div class="flex flex-col gap-2 w-full">
+                        <label for="username" class="font-medium text-gray-700 flex items-center gap-1">
+                            Usuario <span class="text-red-500">*</span>
+                            <i class="pi pi-info-circle text-gray-400 cursor-help custom-tooltip" pTooltip="Ingrese el nombre de usuario para el acceso al sistema." tooltipPosition="right"></i>
+                        </label>
+                        <input
+                            id="username"
+                            type="text"
+                            pInputText
+                            formControlName="username"
+                            class="w-full p-2 border rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                            placeholder="Ingrese el usuario"
+                            autocomplete="off"
+                        />
+                        <small class="text-red-500 flex items-center gap-1" *ngIf="usuarioForm.get('username')?.invalid && usuarioForm.get('username')?.touched">
+                            <i class="pi pi-exclamation-circle"></i>
+                            <span *ngIf="usuarioForm.get('username')?.errors?.['required']">El usuario es requerido</span>
+                            <span *ngIf="usuarioForm.get('username')?.errors?.['minlength']">El usuario debe tener al menos 4 caracteres</span>
+                        </small>
+                    </div>
+
+                    <!-- Contraseña -->
+                    <div class="flex flex-col gap-2 w-full">
+                        <label for="password" class="font-medium text-gray-700 flex items-center gap-1">
+                            Contraseña <span class="text-red-500">*</span>
+                            <i class="pi pi-info-circle text-gray-400 cursor-help custom-tooltip" pTooltip="Ingrese la contraseña para el acceso al sistema." tooltipPosition="right"></i>
+                        </label>
+                        <p-password
+                            id="password"
+                            formControlName="password"
+                            [toggleMask]="true"
+                            [feedback]="false"
+                            [style]="{'width':'100%'}"
+                            [inputStyleClass]="'w-full p-2 border rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500'"
+                            placeholder="Ingrese la contraseña"
+                        ></p-password>
+                        <small class="text-red-500 flex items-center gap-1" *ngIf="usuarioForm.get('password')?.invalid && usuarioForm.get('password')?.touched">
+                            <i class="pi pi-exclamation-circle"></i>
+                            <span *ngIf="usuarioForm.get('password')?.errors?.['required']">La contraseña es requerida</span>
+                        </small>
+                    </div>
+
+                    <!-- Rol -->
+                    <div class="flex flex-col gap-2 w-full">
+                        <label for="rolId" class="font-medium text-gray-700 flex items-center gap-1">
+                            Rol <span class="text-red-500">*</span>
+                            <i class="pi pi-info-circle text-gray-400 cursor-help custom-tooltip" pTooltip="Seleccione el rol del usuario en el sistema." tooltipPosition="right"></i>
+                        </label>
+                        <p-select
+                            id="rolId"
+                            [options]="roles"
+                            formControlName="rolId"
+                            optionLabel="nombre"
+                            optionValue="id"
+                            placeholder="Seleccione un rol"
+                            class="w-full border rounded-lg transition-colors duration-200 focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                        ></p-select>
+                        <small class="text-red-500 flex items-center gap-1" *ngIf="usuarioForm.get('rolId')?.invalid && usuarioForm.get('rolId')?.touched">
+                            <i class="pi pi-exclamation-circle"></i>
+                            <span *ngIf="usuarioForm.get('rolId')?.errors?.['required']">El rol es requerido</span>
+                        </small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="flex justify-end gap-3 mt-4 pt-4 border-t">
+                <p-button label="Cancelar" icon="pi pi-times" styleClass="p-button-secondary p-button-outlined p-button-rounded" (onClick)="onCancel()" [disabled]="loading" pTooltip="Volver a la lista de usuarios" tooltipPosition="top"> </p-button>
+                <p-button label="Guardar" icon="pi pi-check" type="submit" styleClass="p-button-primary p-button-rounded" [disabled]="usuarioForm.invalid || loading" [loading]="loading" pTooltip="Guardar usuario" tooltipPosition="top"> </p-button>
+            </div>
+        </form>
+    </p-card>
+</div>
+
+<p-toast position="top-right"></p-toast>
